@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ChatSwift — The Messenger You Make Yours</title>
+<meta name="description" content="ChatSwift — private, end-to-end encrypted messaging. No phone number needed. Messages auto-delete after 24 hours. Five app designs, six themes." />
+<style>
+  :root {
+    --bg: #0a0a12;
+    --text: #eef0f8;
+    --muted: #9aa3c0;
+    --grad-a: #7c3aed;
+    --grad-b: #ff1f75;
+    --grad-c: #22d3ee;
+    --card: rgba(255,255,255,0.045);
+    --line: rgba(255,255,255,0.09);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 22px; position: relative; z-index: 2; }
+
+  /* ─── Aurora background ─── */
+  .aurora { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+  .orb { position: absolute; border-radius: 50%; filter: blur(90px); opacity: .5; animation: drift 18s ease-in-out infinite alternate; }
+  .orb1 { width: 520px; height: 520px; background: #7c3aed; top: -160px; left: -120px; }
+  .orb2 { width: 440px; height: 440px; background: #ff1f75; top: 20%; right: -140px; animation-delay: -6s; }
+  .orb3 { width: 380px; height: 380px; background: #0ea5e9; bottom: -120px; left: 30%; animation-delay: -12s; opacity: .35; }
+  @keyframes drift {
+    from { transform: translate(0,0) scale(1); }
+    to { transform: translate(60px, 40px) scale(1.15); }
+  }
+  .grain { position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: .05;
+    background-image: radial-gradient(rgba(255,255,255,.6) 1px, transparent 1px); background-size: 3px 3px; }
+
+  /* ─── Nav ─── */
+  nav { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(14px); background: rgba(10,10,18,.6); border-bottom: 1px solid var(--line); }
+  nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 60px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 900; font-size: 17px; letter-spacing: .5px; }
+  .brand .dot { width: 11px; height: 11px; border-radius: 50%; background: linear-gradient(135deg, var(--grad-a), var(--grad-b)); box-shadow: 0 0 14px var(--grad-b); animation: pulse 2.4s ease-in-out infinite; }
+  .nav-links { display: flex; gap: 26px; font-size: 13.5px; font-weight: 600; color: var(--muted); }
+  .nav-links a { color: inherit; text-decoration: none; transition: color .2s; }
+  .nav-links a:hover { color: #fff; }
+  .nav-btn { padding: 8px 18px; border-radius: 999px; background: linear-gradient(135deg, var(--grad-a), var(--grad-b)); color: #fff !important; font-weight: 800; box-shadow: 0 4px 18px rgba(255,31,117,.35); }
+  @keyframes pulse { 0%,100% { box-shadow: 0 0 8px var(--grad-b); } 50% { box-shadow: 0 0 22px var(--grad-b); } }
+
+  /* ─── Hero ─── */
+  header { padding: 90px 0 70px; text-align: center; position: relative; }
+  .eyebrow {
+    display: inline-block; font-size: 11.5px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
+    padding: 7px 16px; border-radius: 999px; border: 1px solid rgba(167,139,250,.4);
+    background: rgba(124,58,237,.12); color: #c4b5fd;
+    animation: fadeUp .8s ease both;
+  }
+  h1 {
+    font-size: clamp(38px, 6.5vw, 68px); font-weight: 900; letter-spacing: -1.5px; line-height: 1.08; margin-top: 22px;
+    background: linear-gradient(90deg, #fff 20%, var(--grad-b) 60%, var(--grad-c));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: fadeUp .8s .1s ease both;
+  }
+  .hero-sub { max-width: 620px; margin: 20px auto 0; color: var(--muted); font-size: 17px; animation: fadeUp .8s .2s ease both; }
+  .hero-badges { margin-top: 24px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; animation: fadeUp .8s .3s ease both; }
+  .chip { font-size: 12px; font-weight: 700; padding: 7px 15px; border-radius: 999px; background: var(--card); border: 1px solid var(--line); color: #cdd4e8; }
+  .chip b { color: #fff; }
+
+  .cta-row { margin-top: 34px; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; animation: fadeUp .8s .4s ease both; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 16px 34px; border-radius: 999px; font-size: 16px; font-weight: 800; text-decoration: none;
+    transition: transform .15s ease, box-shadow .2s ease;
+  }
+  .btn-download {
+    background: linear-gradient(135deg, var(--grad-a), var(--grad-b));
+    color: #fff; box-shadow: 0 10px 34px rgba(255,31,117,.4);
+    animation: glowPulse 2.6s ease-in-out infinite;
+  }
+  .btn-download:hover { transform: translateY(-3px) scale(1.02); }
+  .btn-ghost { border: 1px solid var(--line); background: var(--card); color: #e6e9f5; }
+  .btn-ghost:hover { transform: translateY(-3px); border-color: rgba(167,139,250,.5); }
+  @keyframes glowPulse {
+    0%,100% { box-shadow: 0 10px 34px rgba(255,31,117,.35); }
+    50% { box-shadow: 0 10px 48px rgba(255,31,117,.65); }
+  }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ─── Phone mockup ─── */
+  .phone-wrap { margin: 64px auto 0; animation: float 6s ease-in-out infinite; }
+  @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+  .phone {
+    width: 250px; height: 520px; margin: 0 auto; border-radius: 40px; padding: 10px;
+    background: linear-gradient(160deg, #241d45, #120e24 60%);
+    border: 1px solid rgba(255,255,255,.15);
+    box-shadow: 0 40px 80px rgba(0,0,0,.6), 0 0 60px rgba(124,58,237,.25);
+    position: relative;
+  }
+  .phone::before { content: ""; position: absolute; top: 14px; left: 50%; transform: translateX(-50%); width: 90px; height: 22px; background: #0c0a18; border-radius: 999px; z-index: 2; }
+  .phone-screen { width: 100%; height: 100%; border-radius: 32px; overflow: hidden; background: linear-gradient(180deg, #191334, #0d0b1c); position: relative; }
+  .ps-header { display: flex; align-items: center; gap: 8px; padding: 34px 14px 10px; background: rgba(255,255,255,.04); border-bottom: 1px solid rgba(255,255,255,.07); }
+  .ps-ava { width: 26px; height: 26px; border-radius: 50%; background: linear-gradient(135deg, var(--grad-a), var(--grad-b)); }
+  .ps-name { font-size: 11px; font-weight: 800; }
+  .ps-online { font-size: 8px; color: #7ee2a8; }
+  .ps-body { padding: 14px 12px; display: flex; flex-direction: column; gap: 9px; }
+  .bubble { max-width: 75%; padding: 9px 12px; border-radius: 14px; font-size: 10px; color: #e9ebf5; animation: fadeUp .6s ease both; }
+  .bubble.in { background: rgba(255,255,255,.09); border-bottom-left-radius: 4px; align-self: flex-start; }
+  .bubble.out { background: linear-gradient(135deg, var(--grad-a), var(--grad-b)); align-self: flex-end; border-bottom-right-radius: 4px; }
+  .ps-timer { text-align: center; font-size: 8.5px; color: #7dd3fc; font-weight: 700; margin-top: 2px; animation: fadeUp .6s .3s ease both; }
+  .ps-glows { position: absolute; inset: 0; pointer-events: none; }
+  .ps-glow { position: absolute; width: 120px; height: 120px; border-radius: 50%; filter: blur(40px); opacity: .5; animation: drift 6s ease-in-out infinite alternate; }
+  .g1 { background: #7c3aed; top: 60%; left: -30px; }
+  .g2 { background: #ff1f75; bottom: -30px; right: -20px; animation-delay: -3s; }
+
+  /* ─── Sections ─── */
+  section { padding: 74px 0; position: relative; }
+  .sec-head { text-align: center; max-width: 640px; margin: 0 auto 44px; }
+  .sec-head h2 { font-size: clamp(28px, 4.5vw, 42px); font-weight: 900; letter-spacing: -.8px; }
+  .sec-head p { color: var(--muted); margin-top: 12px; font-size: 15.5px; }
+
+  .reveal { opacity: 0; transform: translateY(34px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+  .reveal[data-delay="1"] { transition-delay: .1s; }
+  .reveal[data-delay="2"] { transition-delay: .2s; }
+  .reveal[data-delay="3"] { transition-delay: .3s; }
+
+  /* 3 reasons */
+  .reasons { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
+  .reason {
+    padding: 30px 26px; border-radius: 22px; background: var(--card); border: 1px solid var(--line);
+    position: relative; overflow: hidden; transition: transform .2s ease, border-color .2s ease;
+  }
+  .reason:hover { transform: translateY(-6px); border-color: rgba(167,139,250,.45); }
+  .reason .big { font-size: 40px; }
+  .reason h3 { font-size: 20px; font-weight: 900; margin-top: 14px; }
+  .reason p { color: var(--muted); font-size: 13.5px; margin-top: 8px; }
+  .reason .vs { display: inline-block; margin-top: 12px; font-size: 11px; font-weight: 700; color: #fda4af; background: rgba(255,31,117,.1); border: 1px solid rgba(255,31,117,.3); padding: 4px 10px; border-radius: 999px; }
+  .reason .glow { position: absolute; width: 160px; height: 160px; border-radius: 50%; filter: blur(60px); opacity: .35; top: -60px; right: -60px; }
+  .r1 .glow { background: var(--grad-a); } .r2 .glow { background: var(--grad-b); } .r3 .glow { background: var(--grad-c); }
+
+  /* Features */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 15px; }
+  .feat {
+    padding: 22px 20px; border-radius: 18px; background: var(--card); border: 1px solid var(--line);
+    transition: transform .2s ease, border-color .2s ease;
+  }
+  .feat:hover { transform: translateY(-5px); border-color: rgba(167,139,250,.4); }
+  .feat .icon { font-size: 26px; }
+  .feat h4 { font-size: 15px; font-weight: 800; margin-top: 10px; }
+  .feat p { font-size: 12.5px; color: var(--muted); margin-top: 5px; }
+
+  /* Designs */
+  .designs { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; }
+  .design {
+    padding: 24px 18px; border-radius: 18px; border: 1px solid var(--line); text-align: center;
+    background: var(--card); transition: transform .2s ease;
+  }
+  .design:hover { transform: translateY(-6px) rotate(-1deg); }
+  .design .mini {
+    width: 56px; height: 110px; margin: 0 auto; border-radius: 14px; border: 1px solid rgba(255,255,255,.15);
+    position: relative; overflow: hidden;
+  }
+  .design h4 { font-size: 14px; font-weight: 800; margin-top: 12px; }
+  .design p { font-size: 11.5px; color: var(--muted); margin-top: 3px; }
+
+  /* Quote strip */
+  .quote-strip {
+    margin-top: 10px; padding: 40px 30px; border-radius: 24px; text-align: center;
+    background: linear-gradient(135deg, rgba(124,58,237,.18), rgba(255,31,117,.14));
+    border: 1px solid rgba(167,139,250,.3);
+  }
+  .quote-strip .q { font-size: clamp(18px, 3vw, 26px); font-weight: 800; font-style: italic; letter-spacing: -.3px; }
+  .quote-strip .a { margin-top: 10px; font-size: 13px; color: #c4b5fd; font-weight: 700; }
+
+  /* Final CTA */
+  .final-cta { text-align: center; padding: 80px 0; }
+  .final-cta h2 { font-size: clamp(30px, 5vw, 48px); font-weight: 900; letter-spacing: -1px; }
+  .final-cta p { color: var(--muted); margin-top: 14px; font-size: 15.5px; }
+  .final-cta .btn { margin-top: 30px; font-size: 18px; padding: 18px 44px; }
+  .tiny { margin-top: 18px; font-size: 12px; color: #6b7390; }
+
+  footer { border-top: 1px solid var(--line); padding: 34px 0 44px; text-align: center; color: #6b7390; font-size: 13px; }
+  footer .brand { justify-content: center; font-size: 15px; margin-bottom: 8px; }
+
+  @media (max-width: 640px) {
+    .nav-links { display: none; }
+    .phone { width: 220px; height: 460px; }
+    section { padding: 56px 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="aurora"><div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div></div>
+<div class="grain"></div>
+
+<nav>
+  <div class="wrap">
+    <div class="brand"><span class="dot"></span>CHATSWIFT</div>
+    <div class="nav-links">
+      <a href="#why">Why</a>
+      <a href="#features">Features</a>
+      <a href="#designs">Designs</a>
+      <a href="#download" class="nav-btn">Download</a>
+    </div>
+  </div>
+</nav>
+
+<header>
+  <div class="wrap">
+    <span class="eyebrow">✨ End-to-end encrypted · No phone number · Free</span>
+    <h1>Your chats.<br />Your rules.</h1>
+    <p class="hero-sub">The messenger that asks for a username — not your number. Messages vanish after 24 hours, and the whole app is yours to redesign.</p>
+    <div class="hero-badges">
+      <span class="chip"><b>5</b> app designs</span>
+      <span class="chip"><b>6</b> themes</span>
+      <span class="chip"><b>24h</b> auto-delete</span>
+      <span class="chip">🎤 <b>voice</b> + 📹 <b>video</b> calls</span>
+    </div>
+    <div class="cta-row">
+      <a class="btn btn-download" id="downloadHero" href="https://chatswift.guftgu.workers.dev/" rel="noopener">⬇️ Download ChatSwift</a>
+      <a class="btn btn-ghost" href="#features">See what's inside →</a>
+    </div>
+
+    <div class="phone-wrap reveal">
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="ps-header">
+            <div class="ps-ava"></div>
+            <div>
+              <div class="ps-name">Sara Ali</div>
+              <div class="ps-online">● online — encrypted</div>
+            </div>
+          </div>
+          <div class="ps-body">
+            <div class="bubble in">Hey! Did you see the new designs? 🔮</div>
+            <div class="bubble out">Yes! Switching to Neon Nights right now 🌃</div>
+            <div class="bubble in">Meet me at 8? 👋</div>
+            <div class="bubble out">Deal. See you soon!</div>
+            <div class="ps-timer">🔒 E2E encrypted · auto-deletes in 24h</div>
+          </div>
+          <div class="ps-glows"><div class="ps-glow g1"></div><div class="ps-glow g2"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="why">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <h2>Why ChatSwift?</h2>
+      <p>Three things no other messenger gives you.</p>
+    </div>
+    <div class="reasons">
+      <div class="reason reveal"><span class="glow"></span>
+        <div class="big">👤</div>
+        <h3>Username only — no number</h3>
+        <p>Sign up with a username you love. Your phone number stays yours — private, always.</p>
+        <span class="vs">✕ WhatsApp needs your number</span>
+      </div>
+      <div class="reason reveal" data-delay="1"><span class="glow"></span>
+        <div class="big">⏳</div>
+        <h3>Messages auto-delete in 24h</h3>
+        <p>Every chat disappears after 24 hours — by default. Nothing lingers, nothing haunts you.</p>
+        <span class="vs">✕ WhatsApp keeps everything forever</span>
+      </div>
+      <div class="reason reveal" data-delay="2"><span class="glow"></span>
+        <div class="big">🔒</div>
+        <h3>End-to-end encrypted</h3>
+        <p>Only you and the person you're talking to can read the conversation. Not even we can.</p>
+        <span class="vs">✓ Your chats are yours</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <h2>Everything you expect. Nothing you don't.</h2>
+      <p>Clean, fast, and beautifully simple.</p>
+    </div>
+    <div class="grid">
+      <div class="feat reveal"><div class="icon">💬</div><h4>Rich Messaging</h4><p>Text, photos, video, GIFs & voice notes — with the composer you already love.</p></div>
+      <div class="feat reveal" data-delay="1"><div class="icon">📞</div><h4>Voice &amp; Video Calls</h4><p>Crystal-clear 1:1 calls with a beautiful fullscreen screen.</p></div>
+      <div class="feat reveal" data-delay="2"><div class="icon">✨</div><h4>Status &amp; Stories</h4><p>Share moments that vanish in 24h. See views. React with hearts.</p></div>
+      <div class="feat reveal"><div class="icon">👥</div><h4>Groups</h4><p>Create groups with your own photo, add your people, chat together.</p></div>
+      <div class="feat reveal" data-delay="1"><div class="icon">🤝</div><h4>Friend Requests</h4><p>You decide who reaches you — accept, decline or block.</p></div>
+      <div class="feat reveal" data-delay="2"><div class="icon">📩</div><h4>Smart Notifications</h4><p>Instant alerts, custom ringtone, reply straight from the notification.</p></div>
+      <div class="feat reveal"><div class="icon">📖</div><h4>Daily Quote</h4><p>A fresh quote every morning — in your language, poetry for poetry lovers.</p></div>
+      <div class="feat reveal" data-delay="1"><div class="icon">🛡️</div><h4>Privacy Controls</h4><p>Hide online status, turn off receipts, block anyone, delete your account anytime.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="designs">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <h2>Five apps in one</h2>
+      <p>ChatSwift doesn't just change colors — it changes the whole look. Pick your vibe, switch anytime.</p>
+    </div>
+    <div class="designs">
+      <div class="design reveal">
+        <div class="mini" style="background:linear-gradient(180deg,#241d45,#0d0b1c);"></div>
+        <h4>🔮 Aurora Glass</h4><p>Frosted glass, living aurora</p>
+      </div>
+      <div class="design reveal" data-delay="1">
+        <div class="mini" style="background:linear-gradient(180deg,#075e54,#0a2f2b);"></div>
+        <h4>💬 Social Classic</h4><p>The familiar classic</p>
+      </div>
+      <div class="design reveal" data-delay="2">
+        <div class="mini" style="background:linear-gradient(180deg,#0d0b1e,#05040d);"></div>
+        <h4>🌃 Neon Nights</h4><p>Cyberpunk glow</p>
+      </div>
+      <div class="design reveal" data-delay="3">
+        <div class="mini" style="background:linear-gradient(180deg,#e8dcc0,#cbb98f);"></div>
+        <h4>📜 Paper 2.0</h4><p>Warm notebook feel</p>
+      </div>
+      <div class="design reveal">
+        <div class="mini" style="background:linear-gradient(180deg,#30306e,#232355);"></div>
+        <h4>🎮 Hyper 3D</h4><p>Bubbly gaming depth</p>
+      </div>
+    </div>
+    <div class="quote-strip reveal">
+      <div class="q">"Some days you need poetry. Some days you need a fresh start. ChatSwift gives you both."</div>
+      <div class="a">— Daily quotes, changing at midnight, in your language</div>
+    </div>
+  </div>
+</section>
+
+<section id="download" class="final-cta">
+  <div class="wrap">
+    <h2 class="reveal">Ready to make it yours?</h2>
+    <p class="reveal" data-delay="1">Free · No ads · No tracking · Android 7.0+</p>
+    <div class="reveal" data-delay="2">
+      <a class="btn btn-download" id="downloadFinal" href="https://chatswift.guftgu.workers.dev/" rel="noopener">⬇️ Download ChatSwift — free</a>
+    </div>
+    <p class="tiny reveal" data-delay="3">After download, open the file and allow "install from unknown sources". 2 minutes, done.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="brand"><span class="dot"></span>CHATSWIFT</div>
+    <p>Private · Personal · Yours. Built for people, not for data.</p>
+  </div>
+</footer>
+
+<script>
+  // Scroll-reveal animation
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
+  }, { threshold: 0.15 });
+  document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+
+  // One place to change the APK link (host badle to sirf yahan badlo)
+  // const DOWNLOAD_URL = "https://chatswift.guftgu.workers.dev/"; // direct APK download (verified 200)
+  // Naya version nikalne par: apk-dist/index.html + ChatSwift-v1.X.X.apk Cloudflare par upload karo,
+  // phir is URL ko versioned path par change karo, e.g. "https://chatswift.guftgu.workers.dev/ChatSwift-v1.1.0.apk"
+</script>
+</body>
+</html>

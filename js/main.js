@@ -1,5 +1,5 @@
 /* ============================================================
-   ChatSwift — "Butter" build
+   Seffni — "Butter" build
    Vanilla JS. No dependencies, no build step.
    ============================================================ */
 (function () {
@@ -10,9 +10,9 @@
      no backend, no page redirect, no mail app popup)
      --------------------------------------------------------- */
   var SUPPORT_EMAIL          = 'alkvers@gmail.com';
-  var EMAILJS_PUBLIC_KEY     = 'SE32tjlnyyAC6r0GF';
+  var EMAILJS_PUBLIC_KEY     = 'SE32tjInyyAC6r0GF';
   var EMAILJS_SERVICE_ID     = 'service_ait3kyd';
-  var EMAILJS_TEMPLATE_ID    = 'template_uh267In';
+  var EMAILJS_TEMPLATE_ID    = 'template_uh267ln';
 
   if (window.emailjs) { emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY }); }
 
@@ -389,7 +389,7 @@
         if (submitBtn) submitBtn.disabled = true;
 
         emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-          title: '[ChatSwift] ' + data.subject,
+          title: '[Seffni] ' + data.subject,
           name: data.name,
           email: data.email,
           message: data.message,
@@ -409,7 +409,7 @@
       /* EmailJS not loaded (e.g. blocked script) → hand off to the visitor's mail app */
       var body = 'Name: ' + data.name + '\nEmail: ' + data.email + '\n\n' + data.message;
       window.location.href = 'mailto:' + SUPPORT_EMAIL +
-        '?subject=' + encodeURIComponent('[ChatSwift] ' + data.subject) +
+        '?subject=' + encodeURIComponent('[Seffni] ' + data.subject) +
         '&body=' + encodeURIComponent(body);
       note.textContent = 'Opening your mail app…';
     });
